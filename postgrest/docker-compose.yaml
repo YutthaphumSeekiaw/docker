@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine # Or a newer version like 17-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: pgdatabase # Your desired database name
+      POSTGRES_USER: yseekiaw   # Your desired username
+      POSTGRES_PASSWORD: Jb220614@2025 # Your desired password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persistent data storage
+    ports:
+      - "5432:5432" # Expose PostgreSQL port
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_dashboard
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com # Your desired pgAdmin login email
+      PGADMIN_DEFAULT_PASSWORD: Jb220614@2025 # Your desired pgAdmin login password
+    ports:
+      - "5051:80" # Expose pgAdmin on port 8080 (can be changed)
+    depends_on:
+      - postgres # Ensure PostgreSQL starts before pgAdmin
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
