@@ -1,0 +1,64 @@
+# version: '3' # กำหนด docker version
+# services:
+#   node-server: # ตั้งชื่อ container (เหมือน --name)
+#     container_name: node
+#     build: . # ตำแหน่ง dockerfile
+#     ports:
+#       - "8000:8000" # map port ออกมา เหมือน -p ใน docker run 
+#   db:
+#     image: mysql:latest
+#     container_name: db
+#     command: --default-authentication-plugin=mysql_native_password
+#     environment:
+#       MYSQL_ROOT_PASSWORD: root # กำหนด user ของ root mysql
+#       MYSQL_DATABASE: tutorial # กำหนด database เริ่มต้นของ mysql
+#     ports:
+#       - "3306:3306"
+#   phpmyadmin:
+#     image: phpmyadmin/phpmyadmin:latest
+#     container_name: phpmyadmin
+#     environment:
+#       PMA_HOST: db # ระบุ host ที่จะให้ phpmyadmin ไปจัดการ ซึ่งสามารถใส่เป็นชื่อ container name (db) ได้เลย
+#       PMA_PORT: 3306 # ระบุ port ของ Database
+#       PMA_USER: root # ระบุ user ของ Database
+#       PMA_PASSWORD: root # ระบุ password ของ Database
+#     ports:
+#       - "8080:80"
+#     depends_on:
+#       - db
+
+version: '3.8'
+
+services:
+  node-server: # ตั้งชื่อ container (เหมือน --name)
+    container_name: node
+    build: . # ตำแหน่ง dockerfile
+    ports:
+      - "8000:8000" # map port ออกมา เหมือน -p ใน docker run 
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: pass
+      MYSQL_DATABASE: testdb
+    volumes:
+      - mysql_data:/var/lib/mysql  #อยู่ใน docker valume  ./mysql_data จะสร้างในเครื่อง
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: admin
+      PMA_PASSWORD: pass
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
